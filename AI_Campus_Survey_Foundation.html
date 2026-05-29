@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI on Campus: Survey Foundation Document</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #ffffff;
+    color: #111111;
+    font-size: 11pt;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    padding: 0.85in 1in 0.85in 1in;
+    background: #ffffff;
+    position: relative;
+  }
+
+  .page-break {
+    page-break-after: always;
+    border-bottom: none;
+  }
+
+  .page + .page {
+    margin-top: 0.4in;
+    border-top: 1px dashed #cccccc;
+  }
+
+  /* Header */
+  .doc-header {
+    border-bottom: 2px solid #111111;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+  }
+
+  .doc-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 8pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1a4fd8;
+    margin-bottom: 6px;
+  }
+
+  .doc-title {
+    font-size: 19pt;
+    font-weight: bold;
+    color: #111111;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .doc-subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 10pt;
+    color: #444444;
+    line-height: 1.55;
+    max-width: 90%;
+  }
+
+  /* Section headings */
+  .section-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1a4fd8;
+    margin-bottom: 5px;
+  }
+
+  .section-heading {
+    font-size: 12pt;
+    font-weight: bold;
+    color: #111111;
+    margin-bottom: 8px;
+  }
+
+  .body-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.65;
+  }
+
+  .section-block {
+    margin-bottom: 24px;
+  }
+
+  hr.rule {
+    border: none;
+    border-top: 0.5px solid #cccccc;
+    margin: 20px 0;
+  }
+
+  /* Meta grid */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .meta-cell {
+    border: 0.5px solid #cccccc;
+    padding: 10px 12px;
+  }
+
+  .meta-cell .label {
+    font-family: 'Arial', sans-serif;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #1a4fd8;
+    margin-bottom: 3px;
+  }
+
+  .meta-cell .value {
+    font-family: 'Arial', sans-serif;
+    font-size: 9.5pt;
+    color: #111111;
+    line-height: 1.45;
+  }
+
+  /* Page 2 header */
+  .page2-header {
+    border-bottom: 1px solid #111111;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .page2-header .doc-name {
+    font-family: 'Arial', sans-serif;
+    font-size: 8pt;
+    color: #888888;
+    letter-spacing: 0.06em;
+  }
+
+  .page2-header .page-num {
+    font-family: 'Arial', sans-serif;
+    font-size: 8pt;
+    color: #888888;
+  }
+
+  /* Layer blocks */
+  .layer-block {
+    border-left: 3px solid #1a4fd8;
+    padding-left: 14px;
+    margin-bottom: 20px;
+  }
+
+  .layer-tag {
+    font-family: 'Arial', sans-serif;
+    font-size: 7.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #1a4fd8;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-bottom: 5px;
+  }
+
+  .layer-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #111111;
+    margin-bottom: 4px;
+  }
+
+  .layer-desc {
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+    color: #555555;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  /* Question list */
+  .q-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .q-table tr {
+    border-bottom: 0.5px solid #e8e8e8;
+  }
+
+  .q-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .q-table td {
+    padding: 5px 0;
+    vertical-align: top;
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+
+  .q-num {
+    color: #1a4fd8;
+    font-weight: bold;
+    width: 26px;
+    padding-right: 8px;
+    white-space: nowrap;
+  }
+
+  /* Research questions */
+  .rq-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .rq-table tr {
+    border-bottom: 0.5px solid #e8e8e8;
+  }
+
+  .rq-table tr:last-child { border-bottom: none; }
+
+  .rq-table td {
+    padding: 5px 0;
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+    vertical-align: top;
+  }
+
+  .rq-num {
+    color: #1a4fd8;
+    font-weight: bold;
+    width: 30px;
+    padding-right: 8px;
+  }
+
+  /* Outputs */
+  .output-row {
+    display: flex;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 0.5px solid #e8e8e8;
+    font-family: 'Arial', sans-serif;
+    font-size: 9pt;
+    color: #333333;
+    line-height: 1.5;
+  }
+
+  .output-row:last-child { border-bottom: none; }
+
+  .output-label {
+    font-weight: bold;
+    color: #111111;
+    min-width: 160px;
+  }
+
+  /* Tags */
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .tag {
+    font-family: 'Arial', sans-serif;
+    font-size: 8pt;
+    color: #1a4fd8;
+    border: 0.5px solid #1a4fd8;
+    padding: 2px 8px;
+  }
+
+  /* Footer */
+  .doc-footer {
+    position: absolute;
+    bottom: 0.5in;
+    left: 1in;
+    right: 1in;
+    border-top: 0.5px solid #cccccc;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-family: 'Arial', sans-serif;
+    font-size: 8pt;
+    color: #888888;
+  }
+
+  .footer-right {
+    font-family: 'Arial', sans-serif;
+    font-size: 8pt;
+    color: #888888;
+  }
+
+  @media print {
+    body { background: #ffffff; }
+    .page { margin: 0; width: 100%; }
+    .page + .page { margin-top: 0; border-top: none; }
+    .page-break { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page page-break">
+
+  <div class="doc-header">
+    <div class="doc-label">Survey Foundation Document</div>
+    <div class="doc-title">AI on Campus: A National Two-Layer Survey</div>
+    <div class="doc-subtitle">Mapping how students and staff use AI tools across U.S. universities to guide institutional policy development, equity frameworks, and funding priorities.</div>
+  </div>
+
+  <!-- The Problem -->
+  <div class="section-block">
+    <div class="section-label">The Problem</div>
+    <div class="section-heading">Why this survey needs to exist</div>
+    <p class="body-text">
+      AI tools have already been absorbed into how students learn and how the modern workforce operates. Yet most universities are making real-time enforcement decisions with no data and no shared standard. Is submitting a grammar-checked paragraph through ChatGPT allowed? What about restructuring an argument? Generating an outline to start from? Each instructor decides differently, each department signals something different, and students are left navigating ambiguity that can carry real academic consequences.
+    </p>
+    <br>
+    <p class="body-text">
+      The issue is not that AI exists on campus. It is that no clear framework exists to distinguish between acceptable assistance and academic dishonesty, at a moment when AI is not going away and is already expected in the workplace. This survey generates the first structured, cross-institutional dataset to bridge that gap and give universities the evidence they need to act.
+    </p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Survey Identity -->
+  <div class="section-block">
+    <div class="section-label">Survey Identity</div>
+    <div class="meta-grid">
+      <div class="meta-cell">
+        <div class="label">Scope</div>
+        <div class="value">National across U.S. universities, piloting at UC Berkeley as the launch institution</div>
+      </div>
+      <div class="meta-cell">
+        <div class="label">Primary audience</div>
+        <div class="value">All undergraduate students broadly, plus university staff and faculty across departments</div>
+      </div>
+      <div class="meta-cell">
+        <div class="label">End goal</div>
+        <div class="value">Policy structure guidance for administrators, and funding case for AI access and literacy programs</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Architecture -->
+  <div class="section-block">
+    <div class="section-label">Survey Architecture</div>
+    <div class="section-heading">Two parallel layers, one unified dataset</div>
+    <p class="body-text">
+      The survey runs as two distinct instruments that feed into a shared published report. Both layers ask about the same underlying reality from different vantage points. The gap between those perspectives is where the most actionable policy tension lives, and it is the core data story this project is built to surface.
+    </p>
+    <br>
+    <p class="body-text">
+      Student responses reveal ground-level behavior and unmet clarity needs. Staff and faculty responses reveal enforcement challenges, tolerance thresholds, and what a workable policy would actually require. Together they produce a picture no single-layer survey can generate.
+    </p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Core Themes -->
+  <div class="section-block">
+    <div class="section-label">Core Themes the Survey Orbits</div>
+    <div class="tag-row">
+      <span class="tag">AI tool access and equity</span>
+      <span class="tag">Policy clarity gaps</span>
+      <span class="tag">Workforce readiness</span>
+      <span class="tag">Academic integrity</span>
+      <span class="tag">Institutional support</span>
+      <span class="tag">AI disclosure norms</span>
+      <span class="tag">Tiered use frameworks</span>
+      <span class="tag">Faculty enforcement confidence</span>
+      <span class="tag">Student awareness</span>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="footer-left">AI on Campus Survey</div>
+    <div class="footer-right">Page 1 of 2</div>
+  </div>
+
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+
+  <div class="page2-header">
+    <div class="doc-name">AI on Campus: Survey Foundation Document</div>
+    <div class="page-num">Page 2 of 2</div>
+  </div>
+
+  <!-- Layer 1 -->
+  <div class="section-block">
+    <div class="section-label">Survey Layers</div>
+
+    <div class="layer-block">
+      <span class="layer-tag">Layer 1 &mdash; Student</span>
+      <div class="layer-title">Student Layer</div>
+      <div class="layer-desc">Targets all undergraduate students broadly, regardless of major or year. Captures ground-level usage behavior, attitudes toward current policies, and unmet clarity needs.</div>
+      <table class="q-table">
+        <tr><td class="q-num">01</td><td>Which AI tools are you currently using? (ChatGPT, Claude, Grammarly, Copilot, Perplexity, etc.)</td></tr>
+        <tr><td class="q-num">02</td><td>What are you primarily using AI for? (grammar/editing, brainstorming, research, outline generation, full drafts, coding, etc.)</td></tr>
+        <tr><td class="q-num">03</td><td>How often do you use AI tools in an academic context per week?</td></tr>
+        <tr><td class="q-num">04</td><td>Does your institution have clear, consistent guidelines on what AI use is and is not acceptable?</td></tr>
+        <tr><td class="q-num">05</td><td>Do current policies feel realistic given how AI is used in the workforce you are entering?</td></tr>
+        <tr><td class="q-num">06</td><td>Have you ever been uncertain whether a specific AI use was allowed under your course policy?</td></tr>
+        <tr><td class="q-num">07</td><td>Do you have equal access to AI tools compared to your peers? (cost, device access, awareness)</td></tr>
+        <tr><td class="q-num">08</td><td>What type of institutional AI guidance would be most useful to you?</td></tr>
+        <tr><td class="q-num">09</td><td>Would you support a university-wide AI use framework with clearly defined tiers of acceptable use?</td></tr>
+      </table>
+    </div>
+
+    <div class="layer-block">
+      <span class="layer-tag">Layer 2 &mdash; Staff and Faculty</span>
+      <div class="layer-title">Staff and Faculty Layer</div>
+      <div class="layer-desc">Targets instructors, TAs, advisors, and academic staff. Captures enforcement challenges, tolerance thresholds, policy preferences, and institutional support gaps.</div>
+      <table class="q-table">
+        <tr><td class="q-num">01</td><td>Are you using AI tools in your own academic, research, or professional work?</td></tr>
+        <tr><td class="q-num">02</td><td>How are you currently addressing AI use in your courses or role? (syllabus policy, honor code reference, case-by-case, none)</td></tr>
+        <tr><td class="q-num">03</td><td>Does your institution provide clear guidance to faculty on how to handle student AI use?</td></tr>
+        <tr><td class="q-num">04</td><td>What level of AI assistance do you consider acceptable in student submissions? (none / grammar only / brainstorming / collaborative / open with disclosure)</td></tr>
+        <tr><td class="q-num">05</td><td>Under what circumstances would you want AI use permitted in your course, and what would you require from students?</td></tr>
+        <tr><td class="q-num">06</td><td>How confident are you in your ability to detect AI-generated content in student work?</td></tr>
+        <tr><td class="q-num">07</td><td>Are you concerned about equity in AI tool access among your students?</td></tr>
+        <tr><td class="q-num">08</td><td>What would a useful, enforceable institutional AI policy look like from your perspective?</td></tr>
+        <tr><td class="q-num">09</td><td>Would you support tiered AI use policies that vary by course type or assignment format?</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Research Questions -->
+  <div class="section-block">
+    <div class="section-label">Core Research Questions</div>
+    <div class="section-heading">What the data needs to answer</div>
+    <table class="rq-table">
+      <tr><td class="rq-num">R1</td><td>What is the actual gap between how students use AI and what staff believe or prefer?</td></tr>
+      <tr><td class="rq-num">R2</td><td>What specific AI use cases do staff want to permit, and under what conditions?</td></tr>
+      <tr><td class="rq-num">R3</td><td>Are current policies creating inequity through unequal AI tool access or awareness?</td></tr>
+      <tr><td class="rq-num">R4</td><td>Is there institutional support infrastructure in place, or are individuals navigating this alone?</td></tr>
+      <tr><td class="rq-num">R5</td><td>What does a tiered, enforceable, campus-wide AI policy framework actually need to include?</td></tr>
+    </table>
+  </div>
+
+  <hr class="rule">
+
+  <!-- Outputs -->
+  <div class="section-block">
+    <div class="section-label">Intended Outputs</div>
+    <div class="section-heading">What this survey feeds into</div>
+    <div class="output-row">
+      <div class="output-label">Published report / white paper</div>
+      <div>Cross-institutional AI usage data presented as a policy-ready document for university administrators, academic leaders, and higher education policy groups.</div>
+    </div>
+    <div class="output-row">
+      <div class="output-label">Policy framework template</div>
+      <div>A tiered AI use guideline structure universities can adopt or adapt, grounded in what students and staff actually reported wanting and needing.</div>
+    </div>
+    <div class="output-row">
+      <div class="output-label">Funding case</div>
+      <div>A data-backed argument for institutional investment in AI tool access, AI literacy programs, and ongoing policy development resources.</div>
+    </div>
+    <div class="output-row">
+      <div class="output-label">Pitch assets</div>
+      <div>Deck and one-pager for presenting findings to university departments, technology sponsors, research bodies, and higher education policy stakeholders.</div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="footer-left">AI on Campus Survey</div>
+    <div class="footer-right">Page 2 of 2</div>
+  </div>
+
+</div>
+
+</body>
+</html>
