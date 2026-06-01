@@ -42,12 +42,16 @@ module.exports = async function handler(req, res) {
       'INSERT INTO public.responses (role, university, answers, submitted_at) VALUES ($1, $2, $3, $4) RETURNING id',
       [data.role, data.university, JSON.stringify(data), data.submitted_at]
     );
-    console.log('Inserted row id:', insert.rows[0]?.id);
-
     const count = await client.query('SELECT COUNT(*) FROM public.responses');
-    console.log('Total rows in public.responses:', count.rows[0].count);
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({
+      success: true,
+      debug: {
+        db: dbInfo.rows[0],
+        inserted_id: insert.rows[0]?.id,
+        total_rows: count.rows[0].count,
+      },
+    });
   } catch (err) {
     console.error('DB error:', err.message);
     return res.status(500).json({ error: 'Failed to save response' });
