@@ -25,7 +25,7 @@ module.exports = async function handler(req, res) {
   try {
     await client.connect();
     await client.query(`
-      CREATE TABLE IF NOT EXISTS responses (
+      CREATE TABLE IF NOT EXISTS public.responses (
         id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
         role text,
         university text,
@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
       )
     `);
     await client.query(
-      'INSERT INTO responses (role, university, answers, submitted_at) VALUES ($1, $2, $3, $4)',
+      'INSERT INTO public.responses (role, university, answers, submitted_at) VALUES ($1, $2, $3, $4)',
       [data.role, data.university, JSON.stringify(data), data.submitted_at]
     );
     return res.status(200).json({ success: true });
