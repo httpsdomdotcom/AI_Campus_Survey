@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Take the Survey — AI on Campus</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #000;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      padding: 20px 28px;
+      border-bottom: 1px solid #e8e8e8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .nav-back {
+      font-size: 13px;
+      color: #666;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-back:hover { color: #000; }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      height: 2px;
+      background: #e8e8e8;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #000;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ── Wrapper ── */
+    .survey-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 60px 28px 100px;
+    }
+
+    /* ── Steps ── */
+    .step {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .step.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Step header ── */
+    .step-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 12px;
+    }
+
+    .step-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .step-sub {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 40px;
+      line-height: 1.65;
+    }
+
+    /* ── Role cards ── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .role-grid { grid-template-columns: 1fr; }
+    }
+
+    .role-card {
+      border: 1.5px solid #d0d0d0;
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .role-card:hover { border-color: #000; }
+
+    .role-card.selected {
+      border-color: #000;
+      background: #000;
+      color: #fff;
+    }
+
+    .role-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .role-card-desc {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.55;
+    }
+
+    .role-card.selected .role-card-desc { color: #aaa; }
+
+    /* ── Form fields ── */
+    .field {
+      margin-bottom: 32px;
+    }
+
+    .field-label {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .field-hint {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 12px;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1.5px solid #d0d0d0;
+      padding: 11px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #000;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+      border-radius: 0;
+      appearance: none;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus { border-color: #000; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23000' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* ── Question blocks ── */
+    .q-block {
+      margin-bottom: 36px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .q-block:last-of-type { border-bottom: none; }
+
+    .q-number {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .q-text {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .q-hint {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    /* ── Radio options ── */
+    .radio-list,
+    .check-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .radio-list li label,
+    .check-list li label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border: 1.5px solid #e0e0e0;
+      cursor: pointer;
+      font-size: 14px;
+      transition: border-color 0.12s, background 0.12s;
+      user-select: none;
+    }
+
+    .radio-list li label:hover,
+    .check-list li label:hover { border-color: #000; }
+
+    .radio-list input[type="radio"],
+    .check-list input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      accent-color: #000;
+      cursor: pointer;
+    }
+
+    .radio-list li:has(input:checked) label,
+    .check-list li:has(input:checked) label {
+      border-color: #000;
+      background: #f5f5f5;
+    }
+
+    /* ── Likert scale ── */
+    .likert-wrap {
+      overflow-x: auto;
+    }
+
+    .likert-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 320px;
+    }
+
+    .likert-table th {
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      text-align: center;
+      padding: 6px 4px;
+      white-space: nowrap;
+    }
+
+    .likert-table td {
+      text-align: center;
+      padding: 8px 4px;
+    }
+
+    .likert-table tr:nth-child(2) td { border-top: 1px solid #e8e8e8; }
+
+    .likert-table input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #000;
+      cursor: pointer;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .btn-primary {
+      padding: 14px 36px;
+      background: #000;
+      color: #fff;
+      border: 2px solid #000;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-primary:hover { background: #fff; color: #000; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-secondary {
+      padding: 14px 24px;
+      background: #fff;
+      color: #000;
+      border: 2px solid #d0d0d0;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-secondary:hover { border-color: #000; }
+
+    /* ── Error message ── */
+    .error-msg {
+      font-size: 13px;
+      color: #c00;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .error-msg.visible { display: block; }
+
+    /* ── Thank you ── */
+    .thankyou-icon {
+      width: 48px;
+      height: 48px;
+      border: 2px solid #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .thankyou-icon svg { width: 22px; height: 22px; }
+
+    /* ── Submitting state ── */
+    .submitting-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.85);
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .submitting-overlay.visible { display: flex; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-brand">AI on Campus</a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back
+    </a>
+  </nav>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <div class="survey-wrap">
+
+    <!-- ── Step 1: Role ── -->
+    <div class="step active" id="step-role">
+      <div class="step-eyebrow">AI on Campus Survey</div>
+      <h1 class="step-title">Who are you?</h1>
+      <p class="step-sub">Select the role that best describes you to get the right set of questions.</p>
+
+      <div class="role-grid">
+        <div class="role-card" id="card-student" onclick="selectRole('student')">
+          <div class="role-card-title">Student</div>
+          <div class="role-card-desc">Undergraduate or graduate student at a U.S. university</div>
+        </div>
+        <div class="role-card" id="card-faculty" onclick="selectRole('faculty')">
+          <div class="role-card-title">Staff or Faculty</div>
+          <div class="role-card-desc">Instructor, professor, TA, advisor, or academic staff</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" id="roleNextBtn" onclick="goToStep('demographics')" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- ── Step 2: Demographics ── -->
+    <div class="step" id="step-demographics">
+      <div class="step-eyebrow">About you</div>
+      <h1 class="step-title">A few quick details</h1>
+      <p class="step-sub">This helps us break down the data by institution and role. All responses are anonymous.</p>
+
+      <div class="field">
+        <label class="field-label" for="university">University or institution</label>
+        <div class="field-hint">Enter the full name (e.g. UC Berkeley, University of Michigan)</div>
+        <input type="text" id="university" placeholder="Your university" autocomplete="off">
+      </div>
+
+      <!-- Student-specific -->
+      <div id="demo-student">
+        <div class="field">
+          <label class="field-label" for="year">Academic year</label>
+          <select id="year">
+            <option value="" disabled selected>Select your year</option>
+            <option value="freshman">Freshman</option>
+            <option value="sophomore">Sophomore</option>
+            <option value="junior">Junior</option>
+            <option value="senior">Senior</option>
+            <option value="graduate">Graduate student</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="major">Field of study</label>
+          <div class="field-hint">General area is fine (e.g. Engineering, Humanities, Business)</div>
+          <input type="text" id="major" placeholder="Your field of study" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Faculty-specific -->
+      <div id="demo-faculty" style="display:none">
+        <div class="field">
+          <label class="field-label" for="role-type">Your role</label>
+          <select id="role-type">
+            <option value="" disabled selected>Select your role</option>
+            <option value="professor">Professor / Instructor</option>
+            <option value="ta">Teaching Assistant</option>
+            <option value="advisor">Academic Advisor</option>
+            <option value="staff">Academic Staff</option>
+            <option value="administrator">Administrator</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="department">Department or unit</label>
+          <input type="text" id="department" placeholder="e.g. Computer Science, Student Affairs" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="goToDemoNext()">Continue</button>
+        <button class="btn-secondary" onclick="goToStep('role')">Back</button>
+      </div>
+      <p class="error-msg" id="demo-error">Please fill in your university and role details before continuing.</p>
+    </div>
+
+    <!-- ── Step 3a: Student Questions ── -->
+    <div class="step" id="step-student">
+      <div class="step-eyebrow">Student Survey — 9 Questions</div>
+      <h1 class="step-title">AI use in your academic life</h1>
+      <p class="step-sub">Answer based on your current experience. There are no right or wrong answers.</p>
+
+      <!-- Q1 -->
+      <div class="q-block">
+        <div class="q-number">Q1</div>
+        <div class="q-text">Which AI tools are you currently using?</div>
+        <div class="q-hint">Select all that apply</div>
+        <ul class="check-list">
+          <li><label><input type="checkbox" name="s_tools" value="chatgpt"> ChatGPT</label></li>
+          <li><label><input type="checkbox" name="s_tools" value="claude"> Claude</label></li>
+          <li><label><input type="checkbox" name="s_tools" value="gemini"> Google Gemini</label></li>
+          <li><label><input type="checkbox" name="s_tools" value="copilot"> Microsoft Copilot</label></li>
+          <li><label><input type="checkbox" name="s_tools" value="grammarly"> Grammarly</label></li>
+          <li><label><input type="checkbox" name="s_tools" value="perplexity"> Perplexity</label></li>
+          <li><label><input type="checkbox" name="s_tools" value="none"> I don't use AI tools</label></li>
+          <li><label><input type="checkbox" name="s_tools" value="other"> Other</label></li>
+        </ul>
+      </div>
+
+      <!-- Q2 -->
+      <div class="q-block">
+        <div class="q-number">Q2</div>
+        <div class="q-text">What are you primarily using AI for?</div>
+        <div class="q-hint">Select all that apply</div>
+        <ul class="check-list">
+          <li><label><input type="checkbox" name="s_use" value="grammar"> Grammar and editing</label></li>
+          <li><label><input type="checkbox" name="s_use" value="brainstorm"> Brainstorming ideas</label></li>
+          <li><label><input type="checkbox" name="s_use" value="research"> Research and summarizing sources</label></li>
+          <li><label><input type="checkbox" name="s_use" value="outline"> Generating outlines</label></li>
+          <li><label><input type="checkbox" name="s_use" value="drafts"> Writing full drafts</label></li>
+          <li><label><input type="checkbox" name="s_use" value="coding"> Coding and debugging</label></li>
+          <li><label><input type="checkbox" name="s_use" value="study"> Study help and explanations</label></li>
+          <li><label><input type="checkbox" name="s_use" value="other"> Other</label></li>
+        </ul>
+      </div>
+
+      <!-- Q3 -->
+      <div class="q-block">
+        <div class="q-number">Q3</div>
+        <div class="q-text">How often do you use AI tools in an academic context per week?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="s_freq" value="never"> Never</label></li>
+          <li><label><input type="radio" name="s_freq" value="1-2"> 1–2 times</label></li>
+          <li><label><input type="radio" name="s_freq" value="3-5"> 3–5 times</label></li>
+          <li><label><input type="radio" name="s_freq" value="daily"> Daily</label></li>
+          <li><label><input type="radio" name="s_freq" value="multiple"> Multiple times a day</label></li>
+        </ul>
+      </div>
+
+      <!-- Q4 -->
+      <div class="q-block">
+        <div class="q-number">Q4</div>
+        <div class="q-text">Does your institution have clear, consistent guidelines on what AI use is and is not acceptable?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="s_guidelines" value="yes"> Yes, the guidelines are clear</label></li>
+          <li><label><input type="radio" name="s_guidelines" value="inconsistent"> Guidelines exist but vary by instructor</label></li>
+          <li><label><input type="radio" name="s_guidelines" value="no"> No clear guidelines</label></li>
+          <li><label><input type="radio" name="s_guidelines" value="unsure"> I'm not sure</label></li>
+        </ul>
+      </div>
+
+      <!-- Q5 -->
+      <div class="q-block">
+        <div class="q-number">Q5</div>
+        <div class="q-text">Do current AI policies feel realistic given how AI is used in the workforce you're entering?</div>
+        <div class="likert-wrap">
+          <table class="likert-table">
+            <tr>
+              <th>Strongly<br>disagree</th>
+              <th>Disagree</th>
+              <th>Neutral</th>
+              <th>Agree</th>
+              <th>Strongly<br>agree</th>
+            </tr>
+            <tr>
+              <td><input type="radio" name="s_realistic" value="1"></td>
+              <td><input type="radio" name="s_realistic" value="2"></td>
+              <td><input type="radio" name="s_realistic" value="3"></td>
+              <td><input type="radio" name="s_realistic" value="4"></td>
+              <td><input type="radio" name="s_realistic" value="5"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="q-block">
+        <div class="q-number">Q6</div>
+        <div class="q-text">Have you ever been uncertain whether a specific AI use was allowed under your course policy?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="s_uncertain" value="yes_often"> Yes, regularly</label></li>
+          <li><label><input type="radio" name="s_uncertain" value="yes_sometimes"> Yes, occasionally</label></li>
+          <li><label><input type="radio" name="s_uncertain" value="no"> No, it's always been clear</label></li>
+          <li><label><input type="radio" name="s_uncertain" value="na"> N/A — I don't use AI academically</label></li>
+        </ul>
+      </div>
+
+      <!-- Q7 -->
+      <div class="q-block">
+        <div class="q-number">Q7</div>
+        <div class="q-text">Do you have equal access to AI tools compared to your peers?</div>
+        <div class="q-hint">Consider cost, device access, and awareness</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="s_access" value="yes"> Yes, equal access</label></li>
+          <li><label><input type="radio" name="s_access" value="somewhat"> Somewhat — some gaps</label></li>
+          <li><label><input type="radio" name="s_access" value="no"> No, I have less access</label></li>
+          <li><label><input type="radio" name="s_access" value="unsure"> I'm not sure</label></li>
+        </ul>
+      </div>
+
+      <!-- Q8 -->
+      <div class="q-block">
+        <div class="q-number">Q8</div>
+        <div class="q-text">What type of institutional AI guidance would be most useful to you?</div>
+        <div class="q-hint">Select all that apply</div>
+        <ul class="check-list">
+          <li><label><input type="checkbox" name="s_guidance" value="written_policy"> A clear written university-wide policy</label></li>
+          <li><label><input type="checkbox" name="s_guidance" value="per_assignment"> Guidance on AI use for each assignment type</label></li>
+          <li><label><input type="checkbox" name="s_guidance" value="literacy"> AI literacy and skills training</label></li>
+          <li><label><input type="checkbox" name="s_guidance" value="approved_tools"> A list of approved tools by course type</label></li>
+          <li><label><input type="checkbox" name="s_guidance" value="none"> None — I don't need institutional guidance</label></li>
+        </ul>
+      </div>
+
+      <!-- Q9 -->
+      <div class="q-block">
+        <div class="q-number">Q9</div>
+        <div class="q-text">Would you support a university-wide AI use framework with clearly defined tiers of acceptable use?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="s_support" value="yes"> Yes, I'd support it</label></li>
+          <li><label><input type="radio" name="s_support" value="no"> No, I prefer instructor-level decisions</label></li>
+          <li><label><input type="radio" name="s_support" value="more_info"> I need more information</label></li>
+          <li><label><input type="radio" name="s_support" value="unsure"> Unsure</label></li>
+        </ul>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="submitSurvey()">Submit Response</button>
+        <button class="btn-secondary" onclick="goToStep('demographics')">Back</button>
+      </div>
+      <p class="error-msg" id="student-error">Please answer all questions before submitting.</p>
+    </div>
+
+    <!-- ── Step 3b: Faculty Questions ── -->
+    <div class="step" id="step-faculty">
+      <div class="step-eyebrow">Staff &amp; Faculty Survey — 9 Questions</div>
+      <h1 class="step-title">AI in your institution and courses</h1>
+      <p class="step-sub">Answer based on your current experience and perspective. There are no right or wrong answers.</p>
+
+      <!-- Q1 -->
+      <div class="q-block">
+        <div class="q-number">Q1</div>
+        <div class="q-text">Are you using AI tools in your own academic, research, or professional work?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="f_own_use" value="yes_regularly"> Yes, regularly</label></li>
+          <li><label><input type="radio" name="f_own_use" value="yes_occasionally"> Yes, occasionally</label></li>
+          <li><label><input type="radio" name="f_own_use" value="curious"> Not yet, but I'm curious</label></li>
+          <li><label><input type="radio" name="f_own_use" value="no"> No</label></li>
+        </ul>
+      </div>
+
+      <!-- Q2 -->
+      <div class="q-block">
+        <div class="q-number">Q2</div>
+        <div class="q-text">How are you currently addressing AI use in your courses or role?</div>
+        <div class="q-hint">Select all that apply</div>
+        <ul class="check-list">
+          <li><label><input type="checkbox" name="f_addressing" value="syllabus"> Explicit syllabus policy</label></li>
+          <li><label><input type="checkbox" name="f_addressing" value="honor_code"> Reference to honor code</label></li>
+          <li><label><input type="checkbox" name="f_addressing" value="case_by_case"> Case-by-case basis</label></li>
+          <li><label><input type="checkbox" name="f_addressing" value="not_yet"> I haven't addressed it yet</label></li>
+          <li><label><input type="checkbox" name="f_addressing" value="na"> Not applicable to my role</label></li>
+        </ul>
+      </div>
+
+      <!-- Q3 -->
+      <div class="q-block">
+        <div class="q-number">Q3</div>
+        <div class="q-text">Does your institution provide clear guidance to faculty on how to handle student AI use?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="f_inst_guidance" value="yes"> Yes, the guidance is clear</label></li>
+          <li><label><input type="radio" name="f_inst_guidance" value="partial"> Partial — some guidance exists but gaps remain</label></li>
+          <li><label><input type="radio" name="f_inst_guidance" value="no"> No clear guidance</label></li>
+          <li><label><input type="radio" name="f_inst_guidance" value="unsure"> I'm not sure</label></li>
+        </ul>
+      </div>
+
+      <!-- Q4 -->
+      <div class="q-block">
+        <div class="q-number">Q4</div>
+        <div class="q-text">What level of AI assistance do you consider acceptable in student submissions?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="f_acceptable" value="none"> None — AI use is not acceptable</label></li>
+          <li><label><input type="radio" name="f_acceptable" value="grammar"> Grammar and spelling correction only</label></li>
+          <li><label><input type="radio" name="f_acceptable" value="brainstorm"> Brainstorming and outlining</label></li>
+          <li><label><input type="radio" name="f_acceptable" value="collaborative"> Collaborative drafting with disclosure</label></li>
+          <li><label><input type="radio" name="f_acceptable" value="open"> Open use with citation</label></li>
+          <li><label><input type="radio" name="f_acceptable" value="varies"> Varies by assignment</label></li>
+        </ul>
+      </div>
+
+      <!-- Q5 -->
+      <div class="q-block">
+        <div class="q-number">Q5</div>
+        <div class="q-text">Under what circumstances would you want AI use permitted, and what would you require from students?</div>
+        <div class="q-hint">Open response — be as specific or general as you'd like</div>
+        <textarea name="f_circumstances" id="f_circumstances" placeholder="e.g. For research-heavy assignments with full citation, or prohibited in timed exams..."></textarea>
+      </div>
+
+      <!-- Q6 -->
+      <div class="q-block">
+        <div class="q-number">Q6</div>
+        <div class="q-text">How confident are you in your ability to detect AI-generated content in student work?</div>
+        <div class="likert-wrap">
+          <table class="likert-table">
+            <tr>
+              <th>Not at all<br>confident</th>
+              <th>Slightly</th>
+              <th>Moderately</th>
+              <th>Very</th>
+              <th>Completely<br>confident</th>
+            </tr>
+            <tr>
+              <td><input type="radio" name="f_detect" value="1"></td>
+              <td><input type="radio" name="f_detect" value="2"></td>
+              <td><input type="radio" name="f_detect" value="3"></td>
+              <td><input type="radio" name="f_detect" value="4"></td>
+              <td><input type="radio" name="f_detect" value="5"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="q-block">
+        <div class="q-number">Q7</div>
+        <div class="q-text">Are you concerned about equity in AI tool access among your students?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="f_equity" value="yes_significantly"> Yes, significantly concerned</label></li>
+          <li><label><input type="radio" name="f_equity" value="yes_somewhat"> Yes, somewhat concerned</label></li>
+          <li><label><input type="radio" name="f_equity" value="no"> No, I don't see it as a significant issue</label></li>
+          <li><label><input type="radio" name="f_equity" value="not_considered"> I haven't considered it</label></li>
+        </ul>
+      </div>
+
+      <!-- Q8 -->
+      <div class="q-block">
+        <div class="q-number">Q8</div>
+        <div class="q-text">What would a useful, enforceable institutional AI policy look like from your perspective?</div>
+        <div class="q-hint">Open response</div>
+        <textarea name="f_policy" id="f_policy" placeholder="e.g. Tiered system where use is permitted in some assignment types but not others, with required disclosure..."></textarea>
+      </div>
+
+      <!-- Q9 -->
+      <div class="q-block">
+        <div class="q-number">Q9</div>
+        <div class="q-text">Would you support tiered AI use policies that vary by course type or assignment format?</div>
+        <ul class="radio-list">
+          <li><label><input type="radio" name="f_tiered" value="yes"> Yes, I'd support tiered policies</label></li>
+          <li><label><input type="radio" name="f_tiered" value="yes_reservations"> Yes, with some reservations</label></li>
+          <li><label><input type="radio" name="f_tiered" value="no"> No, I prefer a single university-wide rule</label></li>
+          <li><label><input type="radio" name="f_tiered" value="more_info"> I need more information</label></li>
+        </ul>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="submitSurvey()">Submit Response</button>
+        <button class="btn-secondary" onclick="goToStep('demographics')">Back</button>
+      </div>
+      <p class="error-msg" id="faculty-error">Please answer all questions before submitting.</p>
+    </div>
+
+    <!-- ── Step 4: Thank You ── -->
+    <div class="step" id="step-thankyou">
+      <div class="thankyou-icon">
+        <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 11l5 5 9-9" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="step-eyebrow">Response submitted</div>
+      <h1 class="step-title">Thank you for participating.</h1>
+      <p class="step-sub">Your response has been recorded. This data will directly inform AI policy frameworks across U.S. universities and help institutions build fairer, clearer guidelines for everyone.</p>
+      <div class="btn-row">
+        <a href="index.html" class="btn-primary" style="text-decoration:none; display:inline-block;">Back to home</a>
+      </div>
+    </div>
+
+  </div><!-- /survey-wrap -->
+
+  <div class="submitting-overlay" id="submittingOverlay">Submitting your response...</div>
+
+  <script>
+    let selectedRole = null;
+
+    const steps = ['role', 'demographics', 'student', 'faculty', 'thankyou'];
+    const totalSteps = 4; // role + demo + questions + thankyou
+
+    function stepIndex(name) {
+      const map = { role: 0, demographics: 1, student: 2, faculty: 2, thankyou: 3 };
+      return map[name] ?? 0;
+    }
+
+    function setProgress(stepName) {
+      const pct = (stepIndex(stepName) / totalSteps) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    function goToStep(name) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + name).classList.add('active');
+      setProgress(name);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectRole(role) {
+      selectedRole = role;
+      document.getElementById('card-student').classList.toggle('selected', role === 'student');
+      document.getElementById('card-faculty').classList.toggle('selected', role === 'faculty');
+      document.getElementById('roleNextBtn').disabled = false;
+    }
+
+    function goToDemoNext() {
+      const uni = document.getElementById('university').value.trim();
+      const errorEl = document.getElementById('demo-error');
+
+      if (selectedRole === 'student') {
+        const year = document.getElementById('year').value;
+        if (!uni || !year) { errorEl.classList.add('visible'); return; }
+      } else {
+        const roleType = document.getElementById('role-type').value;
+        if (!uni || !roleType) { errorEl.classList.add('visible'); return; }
+      }
+
+      errorEl.classList.remove('visible');
+      goToStep(selectedRole === 'student' ? 'student' : 'faculty');
+    }
+
+    // Show/hide role-specific demographic fields
+    document.addEventListener('DOMContentLoaded', () => {
+      // handled dynamically via selectRole + goToDemoNext
+    });
+
+    const origSelectRole = selectRole;
+    selectRole = function(role) {
+      origSelectRole(role);
+      document.getElementById('demo-student').style.display = role === 'student' ? 'block' : 'none';
+      document.getElementById('demo-faculty').style.display = role === 'faculty' ? 'block' : 'none';
+    };
+
+    function collectData() {
+      const data = {
+        role: selectedRole,
+        university: document.getElementById('university').value.trim(),
+        submitted_at: new Date().toISOString(),
+      };
+
+      if (selectedRole === 'student') {
+        data.year = document.getElementById('year').value;
+        data.major = document.getElementById('major').value.trim();
+
+        data.tools = [...document.querySelectorAll('input[name="s_tools"]:checked')].map(i => i.value);
+        data.use_cases = [...document.querySelectorAll('input[name="s_use"]:checked')].map(i => i.value);
+        data.frequency = document.querySelector('input[name="s_freq"]:checked')?.value;
+        data.guidelines = document.querySelector('input[name="s_guidelines"]:checked')?.value;
+        data.realistic = document.querySelector('input[name="s_realistic"]:checked')?.value;
+        data.uncertain = document.querySelector('input[name="s_uncertain"]:checked')?.value;
+        data.access = document.querySelector('input[name="s_access"]:checked')?.value;
+        data.guidance_wanted = [...document.querySelectorAll('input[name="s_guidance"]:checked')].map(i => i.value);
+        data.support_framework = document.querySelector('input[name="s_support"]:checked')?.value;
+      } else {
+        data.role_type = document.getElementById('role-type').value;
+        data.department = document.getElementById('department').value.trim();
+
+        data.own_use = document.querySelector('input[name="f_own_use"]:checked')?.value;
+        data.addressing_ai = [...document.querySelectorAll('input[name="f_addressing"]:checked')].map(i => i.value);
+        data.inst_guidance = document.querySelector('input[name="f_inst_guidance"]:checked')?.value;
+        data.acceptable_level = document.querySelector('input[name="f_acceptable"]:checked')?.value;
+        data.circumstances = document.getElementById('f_circumstances').value.trim();
+        data.detect_confidence = document.querySelector('input[name="f_detect"]:checked')?.value;
+        data.equity_concern = document.querySelector('input[name="f_equity"]:checked')?.value;
+        data.policy_vision = document.getElementById('f_policy').value.trim();
+        data.support_tiered = document.querySelector('input[name="f_tiered"]:checked')?.value;
+      }
+
+      return data;
+    }
+
+    function validateSurvey(data) {
+      if (selectedRole === 'student') {
+        return (
+          data.tools.length > 0 &&
+          data.frequency &&
+          data.guidelines &&
+          data.realistic &&
+          data.uncertain &&
+          data.access &&
+          data.support_framework
+        );
+      } else {
+        return (
+          data.own_use &&
+          data.inst_guidance &&
+          data.acceptable_level &&
+          data.detect_confidence &&
+          data.equity_concern &&
+          data.support_tiered
+        );
+      }
+    }
+
+    async function submitSurvey() {
+      const data = collectData();
+      const errorId = selectedRole === 'student' ? 'student-error' : 'faculty-error';
+      const errorEl = document.getElementById(errorId);
+
+      if (!validateSurvey(data)) {
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      errorEl.classList.remove('visible');
+      document.getElementById('submittingOverlay').classList.add('visible');
+
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (!res.ok) throw new Error('Server error');
+        goToStep('thankyou');
+        setProgress('thankyou');
+        document.getElementById('progressFill').style.width = '100%';
+      } catch (err) {
+        alert('Something went wrong submitting your response. Please try again.');
+      } finally {
+        document.getElementById('submittingOverlay').classList.remove('visible');
+      }
+    }
+  </script>
+
+</body>
+</html>
