@@ -11,7 +11,7 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const client = new Client({ connectionString: process.env.POSTGRES_URL });
+  const client = new Client({ connectionString: process.env.POSTGRES_URL, ssl: { rejectUnauthorized: false } });
 
   try {
     await client.connect();
