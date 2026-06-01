@@ -11,7 +11,16 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const client = new Client({ connectionString: process.env.POSTGRES_URL, ssl: { rejectUnauthorized: false } });
+  const url = new URL(process.env.POSTGRES_URL_NON_POOLING);
+
+  const client = new Client({
+    host: url.hostname,
+    port: Number(url.port) || 5432,
+    database: url.pathname.replace(/^\//, ''),
+    user: url.username,
+    password: url.password,
+    ssl: { rejectUnauthorized: false },
+  });
 
   try {
     await client.connect();
