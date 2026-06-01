@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI on Campus — National Survey</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #ffffff;
+      color: #000000;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── Floating CTA pill ── */
+    .float-cta {
+      position: fixed;
+      top: 24px;
+      right: 28px;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .float-cta.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .float-cta a {
+      display: inline-block;
+      padding: 10px 22px;
+      border: 1.5px solid #000;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border-radius: 100px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .float-cta a:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 120px 0 100px;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 6vw, 58px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: #444;
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+
+    .section-body {
+      font-size: 16px;
+      color: #333;
+      line-height: 1.75;
+    }
+
+    .section-body + .section-body {
+      margin-top: 16px;
+    }
+
+    /* ── Tag grid ── */
+    .tag-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #000;
+      padding: 5px 12px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Layer cards ── */
+    .layer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    @media (max-width: 580px) {
+      .layer-grid { grid-template-columns: 1fr; }
+    }
+
+    .layer-card {
+      border: 1px solid #000;
+      padding: 28px 24px;
+    }
+
+    .layer-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: 1px solid #000;
+      padding: 3px 9px;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+
+    .layer-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .layer-desc {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+
+    .q-list {
+      list-style: none;
+    }
+
+    .q-list li {
+      display: flex;
+      gap: 10px;
+      padding: 7px 0;
+      border-top: 1px solid #e8e8e8;
+      font-size: 13px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .q-list li:last-child {
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .q-num {
+      font-weight: 700;
+      font-size: 11px;
+      min-width: 22px;
+      padding-top: 1px;
+      color: #000;
+    }
+
+    /* ── Research questions ── */
+    .rq-list {
+      list-style: none;
+      margin-top: 24px;
+    }
+
+    .rq-list li {
+      display: flex;
+      gap: 16px;
+      padding: 18px 0;
+      border-top: 1px solid #e8e8e8;
+      font-size: 15px;
+      color: #222;
+      line-height: 1.6;
+      align-items: flex-start;
+    }
+
+    .rq-list li:last-child {
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .rq-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      min-width: 28px;
+      padding-top: 3px;
+      color: #888;
+    }
+
+    /* ── Outputs ── */
+    .output-list {
+      margin-top: 24px;
+      list-style: none;
+    }
+
+    .output-list li {
+      padding: 20px 0;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    .output-list li:last-child {
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .output-name {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-bottom: 6px;
+    }
+
+    .output-desc {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.65;
+    }
+
+    /* ── CTA section ── */
+    .cta-section {
+      padding: 120px 0 100px;
+      text-align: center;
+    }
+
+    .cta-section .section-label {
+      justify-content: center;
+      display: block;
+    }
+
+    .cta-title {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      line-height: 1.15;
+    }
+
+    .cta-sub {
+      font-size: 16px;
+      color: #555;
+      max-width: 480px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 16px 48px;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border: 2px solid #000;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .cta-btn:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .cta-note {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #999;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating shortcut -->
+  <div class="float-cta" id="floatCta">
+    <a href="#survey-cta">Take the Survey</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">National University Research</div>
+      <h1 class="hero-title">AI on Campus</h1>
+      <p class="hero-desc">A national two-layer survey mapping how students and faculty use AI tools across U.S. universities — to build the evidence base for equitable, enforceable institutional policy.</p>
+    </div>
+  </section>
+
+  <!-- The Problem -->
+  <section id="problem">
+    <div class="container">
+      <div class="section-label">The Problem</div>
+      <h2 class="section-title">Why this survey needs to exist</h2>
+      <p class="section-body">
+        AI tools have already been absorbed into how students learn and how the modern workforce operates. Yet most universities are making real-time enforcement decisions with no data and no shared standard. Is submitting a grammar-checked paragraph through ChatGPT allowed? What about restructuring an argument? Generating an outline to start from? Each instructor decides differently, each department signals something different, and students are left navigating ambiguity that can carry real academic consequences.
+      </p>
+      <p class="section-body">
+        The issue is not that AI exists on campus. It is that no clear framework exists to distinguish between acceptable assistance and academic dishonesty — at a moment when AI is not going away and is already expected in the workplace. This survey generates the first structured, cross-institutional dataset to bridge that gap and give universities the evidence they need to act.
+      </p>
+    </div>
+  </section>
+
+  <!-- What We're Mapping -->
+  <section id="themes">
+    <div class="container">
+      <div class="section-label">What We're Mapping</div>
+      <h2 class="section-title">The core questions driving this research</h2>
+      <p class="section-body">
+        The survey orbits a set of tensions that every university is quietly managing right now — between enforcement and access, between academic integrity and workforce preparation, between what students are actually doing and what institutions believe or prefer.
+      </p>
+      <div class="tag-grid">
+        <span class="tag">AI tool access &amp; equity</span>
+        <span class="tag">Policy clarity gaps</span>
+        <span class="tag">Workforce readiness</span>
+        <span class="tag">Academic integrity</span>
+        <span class="tag">Institutional support</span>
+        <span class="tag">AI disclosure norms</span>
+        <span class="tag">Tiered use frameworks</span>
+        <span class="tag">Faculty enforcement confidence</span>
+        <span class="tag">Student awareness</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="structure">
+    <div class="container">
+      <div class="section-label">Survey Architecture</div>
+      <h2 class="section-title">Two parallel layers, one unified dataset</h2>
+      <p class="section-body">
+        The survey runs as two distinct instruments that feed into a shared published report. Student responses reveal ground-level behavior and unmet clarity needs. Staff and faculty responses reveal enforcement challenges, tolerance thresholds, and what a workable policy would actually require. The gap between those perspectives is where the most actionable policy tension lives.
+      </p>
+
+      <div class="layer-grid">
+        <div class="layer-card">
+          <span class="layer-badge">Layer 1 — Student</span>
+          <div class="layer-title">Student Layer</div>
+          <p class="layer-desc">All undergraduate students, regardless of major or year. Captures ground-level usage, attitudes toward current policies, and unmet clarity needs.</p>
+          <ul class="q-list">
+            <li><span class="q-num">01</span><span>Which AI tools are you currently using?</span></li>
+            <li><span class="q-num">02</span><span>What are you primarily using AI for?</span></li>
+            <li><span class="q-num">03</span><span>How often do you use AI in an academic context per week?</span></li>
+            <li><span class="q-num">04</span><span>Does your institution have clear, consistent AI guidelines?</span></li>
+            <li><span class="q-num">05</span><span>Do current policies feel realistic given workforce expectations?</span></li>
+            <li><span class="q-num">06</span><span>Have you ever been uncertain whether a specific AI use was allowed?</span></li>
+            <li><span class="q-num">07</span><span>Do you have equal access to AI tools compared to peers?</span></li>
+            <li><span class="q-num">08</span><span>What type of institutional AI guidance would help most?</span></li>
+            <li><span class="q-num">09</span><span>Would you support a tiered university-wide AI use framework?</span></li>
+          </ul>
+        </div>
+
+        <div class="layer-card">
+          <span class="layer-badge">Layer 2 — Staff &amp; Faculty</span>
+          <div class="layer-title">Staff &amp; Faculty Layer</div>
+          <p class="layer-desc">Instructors, TAs, advisors, and academic staff. Captures enforcement challenges, tolerance thresholds, policy preferences, and institutional support gaps.</p>
+          <ul class="q-list">
+            <li><span class="q-num">01</span><span>Are you using AI tools in your own academic or professional work?</span></li>
+            <li><span class="q-num">02</span><span>How are you currently addressing AI use in your courses?</span></li>
+            <li><span class="q-num">03</span><span>Does your institution provide clear guidance on student AI use?</span></li>
+            <li><span class="q-num">04</span><span>What level of AI assistance do you consider acceptable in submissions?</span></li>
+            <li><span class="q-num">05</span><span>Under what circumstances would you want AI use permitted?</span></li>
+            <li><span class="q-num">06</span><span>How confident are you detecting AI-generated content?</span></li>
+            <li><span class="q-num">07</span><span>Are you concerned about equity in AI tool access among students?</span></li>
+            <li><span class="q-num">08</span><span>What would a useful, enforceable AI policy look like to you?</span></li>
+            <li><span class="q-num">09</span><span>Would you support tiered AI policies that vary by course type?</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Questions -->
+  <section id="research">
+    <div class="container">
+      <div class="section-label">Research Questions</div>
+      <h2 class="section-title">What the data needs to answer</h2>
+      <ul class="rq-list">
+        <li>
+          <span class="rq-num">R1</span>
+          <span>What is the actual gap between how students use AI and what staff believe or prefer?</span>
+        </li>
+        <li>
+          <span class="rq-num">R2</span>
+          <span>What specific AI use cases do staff want to permit, and under what conditions?</span>
+        </li>
+        <li>
+          <span class="rq-num">R3</span>
+          <span>Are current policies creating inequity through unequal AI tool access or awareness?</span>
+        </li>
+        <li>
+          <span class="rq-num">R4</span>
+          <span>Is there institutional support infrastructure in place, or are individuals navigating this alone?</span>
+        </li>
+        <li>
+          <span class="rq-num">R5</span>
+          <span>What does a tiered, enforceable, campus-wide AI policy framework actually need to include?</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Intended Outputs -->
+  <section id="outputs">
+    <div class="container">
+      <div class="section-label">Intended Outputs</div>
+      <h2 class="section-title">What this survey feeds into</h2>
+      <ul class="output-list">
+        <li>
+          <div class="output-name">Published report &amp; white paper</div>
+          <div class="output-desc">Cross-institutional AI usage data presented as a policy-ready document for university administrators, academic leaders, and higher education policy groups.</div>
+        </li>
+        <li>
+          <div class="output-name">Policy framework template</div>
+          <div class="output-desc">A tiered AI use guideline structure universities can adopt or adapt, grounded in what students and staff actually reported wanting and needing.</div>
+        </li>
+        <li>
+          <div class="output-name">Equity &amp; access brief</div>
+          <div class="output-desc">A focused analysis of disparities in AI tool access across student populations, surfacing where institutions need to close gaps before policies can be fairly enforced.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="survey-cta">
+    <div class="container">
+      <div class="section-label">Participate</div>
+      <h2 class="cta-title">Your response shapes<br>university AI policy.</h2>
+      <p class="cta-sub">Takes about 5 minutes. Open to all students, faculty, and staff at U.S. universities. Piloting at UC Berkeley.</p>
+      <a href="#" class="cta-btn">Take the Survey</a>
+      <p class="cta-note">Anonymous &amp; voluntary &nbsp;·&nbsp; No account required</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <span>AI on Campus Survey</span>
+      <span>Piloting at UC Berkeley &nbsp;·&nbsp; National scope</span>
+    </div>
+  </footer>
+
+  <script>
+    const floatCta = document.getElementById('floatCta');
+    const hero = document.querySelector('.hero');
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          floatCta.classList.add('visible');
+        } else {
+          floatCta.classList.remove('visible');
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(hero);
+  </script>
+
+</body>
+</html>
